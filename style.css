@@ -1,0 +1,35 @@
+.quadrado{
+    width:400px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.table{
+    margin-top: 10px;
+}
+
+.form-control{
+    margin-bottom: 10px;
+}
+
+
+
+.botao{
+    margin-bottom: 10px;
+}
+
+.selecionado{
+    background-color:rgb(186, 206, 243);
+}
+
+.negrito{
+    font-weight: bold;
+}
+
+.rodape{
+    text-align: center;
+}
