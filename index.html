@@ -2,6 +2,8 @@
 <html ng-app="CadClientes">
     <meta charset="utf-8">
     <script src="angular/angular.js"></script>
+    <script src="angular/i18n/angular-locale_pt-br.js"></script>
+    <script src="diretivas/dir-alerta.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">    
     <script>
@@ -10,9 +12,10 @@
         function ($scope) {
             $scope.app = "Cadastro de Clientes";
             $scope.clientes = [
-                {nome: "Hugo", codigo: "0001"},
-                {nome: "Maria", codigo: "0002"},
-                {nome: "Paloma", codigo: "0003"}
+                {nome: "Hugo", codigo: "0001", valor: 100.50, data: new Date()},
+                {nome: "Maria", codigo: "0002", valor: 200.60, data: new Date()},
+                {nome: "Amaral", codigo: "0003", valor: 150, data: new Date()},
+                {nome: "Paloma", codigo: "0004", valor: 400, data: new Date()}
             ];
 
             $scope.tipoClientes = [
@@ -48,40 +51,48 @@
         <title>Cadastro de Clientes</title>
     </head>    
     <body ng-controller="CadClientesCtrl">
-        <div class="quadrado bg-light"> 
+        <div class="quadrado bg-light">
             <h4>{{app}}</h4>
+
+            <div dir-alerta></div>
+
+            <input type="text" class="form-control" ng-model="Buscar" placeholder="Busque Aqui">
             <table ng-show="clientes.length > 0" class="table table-striped">
                 <tr>
                     <th></th>
                     <th>Nome</th>
                     <th>Código</th>
+                    <th>Vl Compra</th>
+                    <th>Data Cadastro</th>
                     <th>Tipo Cliente</th>
                 </tr>
-                <tr ng-class="{'selecionado negrito': cliente.selecionado}" ng-repeat="cliente in clientes">
+                <tr ng-class="{'selecionado negrito': cliente.selecionado}" ng-repeat="cliente in clientes | filter:Buscar | orderBy: 'nome' | limitTo:5">
                     <td><input type="checkbox" ng-model="cliente.selecionado"></td>
-                    <td>{{cliente.nome}}</td>
+                    <td>{{cliente.nome | uppercase}}</td>
                     <td>{{cliente.codigo}}</td>
+                    <td>{{cliente.valor | currency}}</td>
+                    <td>{{cliente.data | date: 'dd/MM/yyyy'}}</td>
                     <td>{{cliente.tipoClientes.tipo}}</td>
                 </tr>
             </table>
             <hr>
-            <div class="fomulario">
-                <input class="form-control" type="text" ng-model="cliente.nome" placeholder="Nome">
-                <input class="form-control" type="text" ng-model="cliente.codigo" placeholder="Código">
+            <form name="clienteForm" class="fomulario">
+                <input class="form-control" type="text" ng-model="cliente.nome" placeholder="Nome" ng-required="true">
+                <input class="form-control" type="text" ng-model="cliente.codigo" placeholder="Código" ng-required="true">
                 <select class="form-control" ng-model="cliente.tipoClientes" 
-                    ng-options="tipoCliente.tipo group by tipoCliente.local for tipoCliente in tipoClientes">
+                    ng-options="tipoCliente.tipo group by tipoCliente.local for tipoCliente in tipoClientes" ng-required="true">
                     <option value="">Selecione um tipo de cliente</option>
                 </select>
-                <button class="botao btn btn-primary btn-block" ng-disabled="!cliente.nome || !cliente.codigo" ng-click="adicionarCliente(cliente)">Adicionar Cliente</button>
-                <br>
-                <button class="botao btn btn-danger btn-block" ng-if="temclienteSelecionado(clientes)" ng-click="apagarClientes(clientes)">Apagar Clientes</button>
-            </div>
+            </form>
+            <button class="botao btn btn-primary btn-block" ng-disabled="clienteForm.$invalid" ng-click="adicionarCliente(cliente)">Adicionar Cliente</button>
+            <br>
+            <button class="botao btn btn-danger btn-block" ng-if="temclienteSelecionado(clientes)" ng-click="apagarClientes(clientes)">Apagar Clientes</button>
         </div>
 
         <div class="rodape">
             Fabio Prudencio
         </div>
-        <!--<div ng-include="'rodape.html'">-->
+        <div ng-include="'rodape.html'">
 
     </body>
 </html>
